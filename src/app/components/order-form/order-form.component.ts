@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { OrderedPizzaComponent } from '../ordered-pizza/ordered-pizza.component';
+import { CartService, CartItem } from '../../services/cart.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -10,16 +11,19 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule, OrderedPizzaComponent]
 })
-export class OrderFormComponent {
+export class OrderFormComponent implements OnInit {
   deliveryTime = '';
   deliveryAddress = '';
   paymentType = 'card';
   paymentNumber = '';
 
-  cart = [
-    // Esto luego se sustituirá con el carrito real
-    { pizza: { title: 'Margarita', price: 8, image: '', ok_celiacs: true, ingredients: ['Tomate', 'Mozzarella'] }, quantity: 2 }
-  ];
+  cart: CartItem[] = [];
+
+  constructor(private cartService: CartService) { }
+
+  ngOnInit(): void {
+    this.cart = this.cartService.getCart();
+  }
 
   placeOrder() {
     if (this.isValid()) {

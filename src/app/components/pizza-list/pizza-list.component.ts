@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Pizza, PizzaService } from '../../services/pizza.service';
-import { PizzaCardComponent } from '../pizza-card/pizza-card.component';
+import { CartService } from '../../services/cart.service';
+import { PizzaCardComponent } from "../pizza-card/pizza-card.component";
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -13,7 +14,7 @@ export class PizzaListComponent implements OnInit {
   pizzas: Pizza[] = [];
   error = '';
 
-  constructor(private pizzaService: PizzaService) { }
+  constructor(private pizzaService: PizzaService, private cartService: CartService) { }
 
   ngOnInit(): void {
     this.loadPizzas();
@@ -24,13 +25,13 @@ export class PizzaListComponent implements OnInit {
       next: data => {
         this.pizzas = data;
       },
-      error: err => {
+      error: () => {
         this.error = 'Error cargando pizzas.';
       }
     });
   }
 
   onAddToCart(event: { pizza: Pizza; quantity: number }) {
-    console.log('Añadido al carrito:', event);
+    this.cartService.addToCart(event.pizza, event.quantity);
   }
 }
