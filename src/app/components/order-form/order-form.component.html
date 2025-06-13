@@ -1,0 +1,31 @@
+<div class="container my-4">
+    <h2>Realizar pedido</h2>
+
+    <div class="mb-3">
+        <label>Hora de entrega:</label>
+        <input type="time" class="form-control" [(ngModel)]="deliveryTime">
+    </div>
+
+    <div class="mb-3">
+        <label>Dirección:</label>
+        <input type="text" class="form-control" [(ngModel)]="deliveryAddress">
+    </div>
+
+    <div class="mb-3">
+        <label>Forma de pago:</label>
+        <select class="form-select" [(ngModel)]="paymentType">
+            <option value="card">Tarjeta</option>
+            <option value="bizum">Bizum</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Número:</label>
+        <input type="text" class="form-control" [(ngModel)]="paymentNumber">
+    </div>
+
+    <h4>Resumen del carrito</h4>
+    <app-ordered-pizza *ngFor="let item of cart" [pizza]="item.pizza" [quantity]="item.quantity" />
+
+    <button class="btn btn-success w-100 mt-3" (click)="placeOrder()">PAGAR</button>
+</div>
