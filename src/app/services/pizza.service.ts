@@ -2,18 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface Ingredient {
-  name: string;
-  icon: string;
-}
-
 export interface Pizza {
   id: number;
   title: string;
-  price: number;
   image: string;
+  price: number;
   ok_celiacs: boolean;
-  ingredients: Ingredient[];
+  ingredients: string[];
 }
 
 @Injectable({
@@ -24,12 +19,11 @@ export class PizzaService {
 
   constructor(private http: HttpClient) { }
 
-  getPizzas(nameFilter = '', ingredientsFilter = ''): Observable<Pizza[]> {
-    let url = this.apiUrl;
-    const params = [];
-    if (nameFilter) params.push(`name=${nameFilter}`);
-    if (ingredientsFilter) params.push(`ingredients=${ingredientsFilter}`);
-    if (params.length > 0) url += '?' + params.join('&');
-    return this.http.get<Pizza[]>(url);
+  getPizzas(name?: string, ingredients?: string[]): Observable<Pizza[]> {
+    let params: any = {};
+    if (name) params.name = name;
+    if (ingredients) params.ingredients = ingredients.join(',');
+
+    return this.http.get<Pizza[]>(this.apiUrl, { params });
   }
 }
