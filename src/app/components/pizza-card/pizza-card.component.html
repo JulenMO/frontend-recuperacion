@@ -1,0 +1,15 @@
+<div class="card h-100">
+    <img [src]="pizza.image" class="card-img-top" alt="{{ pizza.title }}" />
+    <div class="card-body d-flex flex-column">
+        <h5 class="card-title text-center">{{ pizza.title }}</h5>
+        <p class="card-text text-center fw-bold">{{ pizza.price | currency:'EUR' }}</p>
+        <div class="ingredients d-flex justify-content-center flex-wrap mb-2">
+            <img *ngFor="let ing of pizza.ingredients" [src]="ing.icon" [alt]="ing.name" class="ingredient-icon mx-1"
+                width="24" height="24" />
+        </div>
+        <div class="mt-auto d-flex justify-content-center align-items-center gap-2">
+            <input type="number" min="1" [(ngModel)]="quantity" class="form-control w-50" />
+            <button class="btn btn-primary" (click)="onAdd()">Añadir</button>
+        </div>
+    </div>
+</div>
