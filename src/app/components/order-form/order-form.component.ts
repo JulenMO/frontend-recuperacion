@@ -1,49 +1,84 @@
 import { Component, OnInit } from '@angular/core';
-import { OrderedPizzaComponent } from '../ordered-pizza/ordered-pizza.component';
-import { CartService } from '../../services/cart.service';
+import { OrderService, CartItem, OrderRequest } from '../../services/order.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CartItem } from '../../models/cart-item.model';
 
 @Component({
   selector: 'app-order-form',
   templateUrl: './order-form.component.html',
   styleUrls: ['./order-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, OrderedPizzaComponent]
+  imports: [CommonModule, FormsModule]
 })
 export class OrderFormComponent implements OnInit {
-  deliveryTime = '';
-  deliveryAddress = '';
-  paymentType = 'card';
-  paymentNumber = '';
+  cartItems: CartItem[] = [];
+  delivery_time = '';
+  delivery_address = '';
+  payment_type = 'card';
+  payment_number = '';
+  errorMsg = '';
+  successMsg = '';
 
-  cart: CartItem[] = [];
-
-  constructor(private cartService: CartService) { }
+  constructor(private orderService: OrderService) { }
 
   ngOnInit(): void {
-    this.cart = this.cartService.getCart();
+    this.orderService.cartItems$.subscribe(items => {
+      this.cartItems = items;
+    });
   }
 
-  placeOrder() {
-    if (this.isValid()) {
-      console.log('Pedido realizado:', {
-        deliveryTime: this.deliveryTime,
-        deliveryAddress: this.deliveryAddress,
-        payment: { type: this.paymentType, number: this.paymentNumber },
-        pizzas: this.cart
-      });
+  get totalQuantity(): number {
+    return this.cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  }
+
+  validate(): boolean {
+    this.errorMsg = '';
+    if (this.cartItems.length === 0) {
+      this.errorMsg = 'El carrito está vacío.';
+      return false;
     }
+    if (!this.delivery_time.match(/^\d{2}:\d{2}$/)) {
+      this.errorMsg = 'Hora de entrega inválida. Usa formato HH:mm.';
+      return false;
+    }
+    if (!this.delivery_address.trim()) {
+      this.errorMsg = 'Dirección de entrega es obligatoria.';
+      return false;
+    }
+    if (this.payment_type === 'card' && !this.payment_number.match(/^\d{16}$/)) {
+      this.errorMsg = 'Número de tarjeta debe tener 16 dígitos.';
+      return false;
+    }
+    if (this.payment_type === 'bizum' && !this.payment_number.match(/^\d{9}$/)) {
+      this.errorMsg = 'Número de móvil Bizum debe tener 9 dígitos.';
+      return false;
+    }
+    return true;
   }
 
-  isValid() {
-    const timeValid = /^\d{2}:\d{2}$/.test(this.deliveryTime);
-    const addressValid = this.deliveryAddress.trim().length > 0;
-    const paymentValid = this.paymentType === 'card'
-      ? /^\d{16}$/.test(this.paymentNumber)
-      : /^\d{9}$/.test(this.paymentNumber);
+  onSubmit() {
+    if (!this.validate()) return;
+    const order: OrderRequest = {
+      pizzas: this.cartItems.map(item => ({ pizza_id: item.pizza.id, quantity: item.quantity })),
+      delivery_time: this.delivery_time,
+      delivery_address: this.delivery_address,
+      payment: { payment_type: this.payment_type, number: this.payment_number }
+    };
+    this.orderService.sendOrder(order).subscribe({
+      next: _ => {
+        this.successMsg = 'Pedido enviado con éxito.';
+        this.orderService.clearCart();
+        this.delivery_time = '';
+        this.delivery_address = '';
+        this.payment_number = '';
+      },
+      error: err => {
+        this.errorMsg = 'Error al enviar el pedido.';
+      }
+    });
+  }
 
-    return timeValid && addressValid && paymentValid;
+  removeItem(pizzaId: number) {
+    this.orderService.removeFromCart(pizzaId);
   }
 }

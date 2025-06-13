@@ -1,31 +1,30 @@
-<div class="container my-4">
-    <h2>Realizar pedido</h2>
+<div *ngIf="errorMsg" class="alert alert-danger">{{ errorMsg }}</div>
+<div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
 
-    <div class="mb-3">
-        <label>Hora de entrega:</label>
-        <input type="time" class="form-control" [(ngModel)]="deliveryTime">
+<div *ngIf="cartItems.length === 0">
+    <p>El carrito está vacío.</p>
+</div>
+
+<div *ngIf="cartItems.length > 0">
+    <div *ngFor="let item of cartItems" class="ordered-pizza">
+        <p>{{ item.pizza.title }} x {{ item.quantity }} <button (click)="removeItem(item.pizza.id)">X</button></p>
     </div>
 
-    <div class="mb-3">
-        <label>Dirección:</label>
-        <input type="text" class="form-control" [(ngModel)]="deliveryAddress">
-    </div>
+    <label>Hora de entrega (HH:mm):</label>
+    <input [(ngModel)]="delivery_time" type="time" required />
 
-    <div class="mb-3">
-        <label>Forma de pago:</label>
-        <select class="form-select" [(ngModel)]="paymentType">
-            <option value="card">Tarjeta</option>
-            <option value="bizum">Bizum</option>
-        </select>
-    </div>
+    <label>Dirección de entrega:</label>
+    <input [(ngModel)]="delivery_address" type="text" required />
 
-    <div class="mb-3">
-        <label>Número:</label>
-        <input type="text" class="form-control" [(ngModel)]="paymentNumber">
-    </div>
+    <label>Método de pago:</label>
+    <select [(ngModel)]="payment_type">
+        <option value="card">Tarjeta</option>
+        <option value="bizum">Bizum</option>
+    </select>
 
-    <h4>Resumen del carrito</h4>
-    <app-ordered-pizza *ngFor="let item of cart" [pizza]="item.pizza" [quantity]="item.quantity" />
+    <label *ngIf="payment_type === 'card'">Número de tarjeta (16 dígitos):</label>
+    <label *ngIf="payment_type === 'bizum'">Número móvil Bizum (9 dígitos):</label>
+    <input [(ngModel)]="payment_number" [type]="payment_type === 'card' ? 'text' : 'tel'" />
 
-    <button class="btn btn-success w-100 mt-3" (click)="placeOrder()">PAGAR</button>
+    <button (click)="onSubmit()" [disabled]="cartItems.length === 0">Enviar pedido</button>
 </div>
