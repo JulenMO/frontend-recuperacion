@@ -3,7 +3,7 @@ import { OrderedPizzaComponent } from '../ordered-pizza/ordered-pizza.component'
 import { CartService } from '../../services/cart.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CartItem } from '../../models/cartItem.model';
+import { CartItem } from '../../models/cart-item.model';
 
 @Component({
   selector: 'app-order-form',
