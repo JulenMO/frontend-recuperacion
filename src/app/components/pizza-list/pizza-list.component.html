@@ -1,8 +1,7 @@
-<div class="pizza-list-container p-3 overflow-auto" style="max-height: calc(100vh - 140px);">
-    <div class="row row-cols-1 row-cols-md-3 g-3">
-        <div class="col" *ngFor="let pizza of pizzas">
+<div class="container my-4">
+    <div class="row g-3">
+        <div class="col-12 col-md-4" *ngFor="let pizza of pizzas">
             <app-pizza-card [pizza]="pizza" (addToCart)="onAddToCart($event)"></app-pizza-card>
         </div>
     </div>
-    <div *ngIf="error" class="alert alert-danger mt-3 text-center">{{ error }}</div>
 </div>

@@ -1,4 +1,8 @@
-.ingredient-icon {
-    filter: grayscale(0.2);
-    cursor: default;
+.card {
+    min-height: 100%;
+
+    img {
+        object-fit: cover;
+        height: 200px;
+    }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Pizza, PizzaService } from '../../services/pizza.service';
-import { PizzaCardComponent } from "../pizza-card/pizza-card.component";
+import { PizzaCardComponent } from '../pizza-card/pizza-card.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -31,7 +31,6 @@ export class PizzaListComponent implements OnInit {
   }
 
   onAddToCart(event: { pizza: Pizza; quantity: number }) {
-    // Por ahora solo consola, luego enviaremos a carrito/servicio
     console.log('Añadido al carrito:', event);
   }
 }
