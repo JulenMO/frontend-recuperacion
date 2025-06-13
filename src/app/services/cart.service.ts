@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Pizza } from './pizza.service';
+import { CartItem } from '../models/cartItem.model';
+import { Pizza } from '../models/pizza.model';
 
-export interface CartItem {
-  pizza: Pizza;
-  quantity: number;
-}
 
 @Injectable({
   providedIn: 'root'

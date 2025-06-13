@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Pizza, PizzaService } from '../../services/pizza.service';
+import { PizzaService } from '../../services/pizza.service';
 import { CartService } from '../../services/cart.service';
 import { PizzaCardComponent } from "../pizza-card/pizza-card.component";
 import { CommonModule } from '@angular/common';
+import { Pizza } from '../../models/pizza.model';
 
 @Component({
   selector: 'app-pizza-list',

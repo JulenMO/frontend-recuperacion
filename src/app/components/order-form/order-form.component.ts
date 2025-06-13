@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderedPizzaComponent } from '../ordered-pizza/ordered-pizza.component';
-import { CartService, CartItem } from '../../services/cart.service';
+import { CartService } from '../../services/cart.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CartItem } from '../../models/cartItem.model';
 
 @Component({
   selector: 'app-order-form',

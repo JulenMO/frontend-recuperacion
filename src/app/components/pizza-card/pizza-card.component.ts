@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Pizza } from '../../services/pizza.service';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { Pizza } from '../../models/pizza.model';
 
 @Component({
   imports: [CommonModule, BrowserModule, FormsModule],
